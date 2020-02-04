@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Api doc title</title>
+    <script src="vue/Vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <h3 v-if="textSearch.length > 0">{{ textSearch }}, длина {{ textSearch.length }}</h3>
+    <input type="text" size="50" v-model="textSearch">
+    <br>
+    <button @click="getHashTags">Загрузить хэштеги</button>
+    <ul>
+        <li v-for="hashtag in hashtags">{{ hashtag }}</li>
+    </ul>
+    <br>
+    <button @click="getCities">Загрузить города</button>
+    <ul>
+        <li v-for="city in cities">{{ city.city }}, {{ city.region }}</li>
+    </ul>
+</div>
+<script>
+    new Vue({
+            el: '#app',
+            data: {
+                hashtags: [],
+                cities: [],
+                textSearch: '',
+                url: {
+                    hashtags: 'https://dka-develop.ru/api?type=hashtag',
+                    cities: 'https://dka-develop.ru/api?type=city',
+                }
+            },
+            watch: {
+                textSearch: function () {
+                    if (this.textSearch.length > 3) {
+                        this.textSearch = 'Данные из кода';
+                    }
+                }
+            },
+            methods: {
+                getHashTags() {
+                    axios.get(this.url.hashtags).then((response) => {
+                        console.dir(response);
+                        this.hashtags = response.data;
+                    });
+                },
+                getCities() {
+                    axios.get(this.url.cities).then((response) => {
+                        console.dir(response);
+                        this.cities = response.data;
+                    });
+                },
+            },
+            created: function () {
+
+            },
+
+        }
+    );
+</script>
+</body>
+</html>
